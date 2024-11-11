@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat Application</title>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.5.1/sockjs.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
+    <script src="js/main.js" defer></script>
+</head>
+<body>
+    <h1>Chat Application</h1>
+
+    <!-- Create Group Section -->
+    <h2>Create Group</h2>
+    <input type="text" id="createGroupName" placeholder="Group Name">
+    <button onclick="createGroup()">Create Group</button>
+
+    <!-- Join Group Section -->
+    <h2>Join Group</h2>
+    <input type="text" id="joinGroupName" placeholder="Group Name">
+    <input type="text" id="joinUsername" placeholder="Username">
+    <button onclick="joinGroup()">Join Group</button>
+
+    <!-- Leave Group Section -->
+    <h2>Leave Group</h2>
+    <input type="text" id="leaveGroupName" placeholder="Group Name">
+    <input type="text" id="leaveUsername" placeholder="Username">
+    <button onclick="leaveGroup()">Leave Group</button>
+
+    <!-- Display Users Section -->
+    <h2>Group Users</h2>
+    <input type="text" id="displayGroupName" placeholder="Group Name">
+    <button onclick="getUsers()">Get Users</button>
+    <ul id="userList"></ul>
+
+    <!-- Send Message Section -->
+    <h2>Send Message</h2>
+    <input type="text" id="messageGroupName" placeholder="Group Name">
+    <input type="text" id="messageSender" placeholder="Your Username">
+    <input type="text" id="messageContent" placeholder="Message Content">
+    <button onclick="sendMessage()">Send Message</button>
+
+    <!-- View Messages Section -->
+    <h2>View Messages</h2>
+    <input type="text" id="viewGroupName" placeholder="Group Name">
+    <button onclick="viewMessages()">View Messages</button>
+    <ul id="messageList"></ul>
+</body>
+</html>

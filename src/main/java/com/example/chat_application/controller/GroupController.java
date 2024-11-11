@@ -5,6 +5,7 @@ import com.example.chat_application.model.User;
 import com.example.chat_application.service.GroupManagementService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -17,36 +18,52 @@ public class GroupController {
     @Autowired
     private GroupManagementService groupManagementService;
 
-    // Endpoint to create a new group
+    private final SimpMessagingTemplate messagingTemplate;
+
+    public GroupController(SimpMessagingTemplate messagingTemplate) {
+        this.messagingTemplate = messagingTemplate;
+    }
+
     @PostMapping("/create")
     public ResponseEntity<String> createGroup(@RequestParam String groupName) {
         String result = groupManagementService.createGroup(groupName);
         return ResponseEntity.ok(result);
     }
 
-    // Endpoint for a user to join a group
     @PostMapping("/join")
     public ResponseEntity<String> joinGroup(@RequestParam String groupName, @RequestParam String username) {
         String result = groupManagementService.joinGroup(groupName, username);
+
+        // Notify other members of the group about the new user
+        Message joinMessage = new Message(username, username + " has joined the group " + groupName);
+        messagingTemplate.convertAndSend("/topic/" + groupName, joinMessage);
+
         return ResponseEntity.ok(result);
     }
 
-    // Endpoint for a user to leave a group
     @PostMapping("/leave")
     public ResponseEntity<String> leaveGroup(@RequestParam String groupName, @RequestParam String username) {
         String result = groupManagementService.leaveGroup(groupName, username);
+
+        // Notify other members of the group about the user leaving
+        Message leaveMessage = new Message(username, username + " has left the group " + groupName);
+        messagingTemplate.convertAndSend("/topic/" + groupName, leaveMessage);
+
         return ResponseEntity.ok(result);
     }
 
-    // Endpoint to send a message to a group
     @PostMapping("/send")
     public ResponseEntity<String> sendMessage(@RequestParam String groupName, @RequestParam String sender,
             @RequestParam String content) {
         String result = groupManagementService.sendMessageToGroup(groupName, sender, content);
+
+        // Broadcast the message to the group using WebSocket
+        Message message = new Message(sender, content);
+        messagingTemplate.convertAndSend("/topic/" + groupName, message);
+
         return ResponseEntity.ok(result);
     }
 
-    // Endpoint to get messages from a group
     @GetMapping("/messages")
     public ResponseEntity<List<Message>> getMessages(@RequestParam String groupName) {
         List<Message> messages = groupManagementService.getGroupMessages(groupName);
@@ -56,7 +73,6 @@ public class GroupController {
         return ResponseEntity.ok(messages);
     }
 
-    // Endpoint to get active users in a group
     @GetMapping("/users")
     public ResponseEntity<Set<User>> getActiveUsers(@RequestParam String groupName) {
         Set<User> activeUsers = groupManagementService.getActiveUsers(groupName);
