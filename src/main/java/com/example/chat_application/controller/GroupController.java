@@ -38,6 +38,10 @@ public class GroupController {
         Message joinMessage = new Message(username, username + " has joined the group " + groupName);
         messagingTemplate.convertAndSend("/topic/" + groupName, joinMessage);
 
+        // Send the updated user list to all clients in the group
+        Set<User> activeUsers = groupManagementService.getActiveUsers(groupName);
+        messagingTemplate.convertAndSend("/topic/" + groupName + "/users", activeUsers);
+
         return ResponseEntity.ok(result);
     }
 
@@ -48,6 +52,10 @@ public class GroupController {
         // Notify other members of the group about the user leaving
         Message leaveMessage = new Message(username, username + " has left the group " + groupName);
         messagingTemplate.convertAndSend("/topic/" + groupName, leaveMessage);
+
+        // Send the updated user list to all clients in the group
+        Set<User> activeUsers = groupManagementService.getActiveUsers(groupName);
+        messagingTemplate.convertAndSend("/topic/" + groupName + "/users", activeUsers);
 
         return ResponseEntity.ok(result);
     }
