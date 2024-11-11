@@ -4,6 +4,7 @@ import com.example.chat_application.model.Message;
 import com.example.chat_application.model.User;
 import com.example.chat_application.service.GroupManagementService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.web.bind.annotation.*;
@@ -32,6 +33,10 @@ public class GroupController {
 
     @PostMapping("/join")
     public ResponseEntity<String> joinGroup(@RequestParam String groupName, @RequestParam String username) {
+        if (groupManagementService.isUserInGroup(groupName, username)) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(username + " is already a member of the group " + groupName);
+        }
         String result = groupManagementService.joinGroup(groupName, username);
 
         // Notify other members of the group about the new user

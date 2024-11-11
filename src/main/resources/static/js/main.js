@@ -190,6 +190,17 @@ function createGroup() {
 }
 
 // Join an existing group
+// function joinGroup() {
+//     const groupName = document.getElementById("joinGroupName").value;
+//     const username = document.getElementById("joinUsername").value;
+//     axios.post(`${baseURL}/join`, null, { params: { groupName, username } })
+//         .then(response => {
+//             alert(response.data);
+//             subscribeToGroup(groupName);  // Subscribe to WebSocket for this group
+//             getUsers();  // Fetch and display updated user list
+//         })
+//         .catch(error => console.error('Error joining group:', error));
+// }
 function joinGroup() {
     const groupName = document.getElementById("joinGroupName").value;
     const username = document.getElementById("joinUsername").value;
@@ -199,8 +210,16 @@ function joinGroup() {
             subscribeToGroup(groupName);  // Subscribe to WebSocket for this group
             getUsers();  // Fetch and display updated user list
         })
-        .catch(error => console.error('Error joining group:', error));
+        .catch(error => {
+            // Handle the error when the user is already in the group
+            if (error.response && error.response.status === 400) {
+                alert(error.response.data);  // Show the message from the backend
+            } else {
+                console.error('Error joining group:', error);
+            }
+        });
 }
+
 
 // Leave a group
 function leaveGroup() {

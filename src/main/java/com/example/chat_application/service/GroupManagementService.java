@@ -168,4 +168,17 @@ public class GroupManagementService {
         Group group = groupRepository.findById(groupName).orElse(null);
         return group != null ? group.getUsers() : null;
     }
+
+    public boolean isUserInGroup(String groupName, String username) {
+        // Check if the user is in the group
+        Set<User> usersInGroup = getActiveUsers(groupName); // Assuming this method returns all active users in the
+                                                            // group
+        for (User user : usersInGroup) {
+            if (user.getUsername().equals(username)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
 }
