@@ -9,6 +9,7 @@ This project is a real-time chat application that uses **WebSocket**, **STOMP**,
 - [Setup and Installation](#setup-and-installation)
 - [Running the Application](#running-the-application)
 - [Using Multiple Ports](#using-multiple-ports)
+- [Verifying and Testing](#verifying-and-testing)
 - [Troubleshooting](#troubleshooting)
 
 ## Technologies Used
@@ -30,7 +31,7 @@ The application is divided into the following parts:
 ### Clone the Repository
 
 ```bash
-git clone https://github.com/yourusername/chat-application.git
+git clone https://github.com/monishkumardhanasekar/chat-application.git
 cd chat-application
 ```
 
@@ -74,9 +75,27 @@ You can run multiple instances of the application on different ports by specifyi
   ```
 - **Start a Second Instance on a Different Port (e.g., 8083)**:
   `bash
-    ./mvnw spring-boot:run -Dspring-boot.run.arguments="--server.port=8083"
-    `
+./mvnw spring-boot:run -Dspring-boot.run.arguments="--server.port=8083"
+`
   Each instance will function independently but still connect to RabbitMQ for real-time messaging.
+
+## Verifying and Testing
+
+To verify the application is running correctly:
+
+- **Check Application Status**:
+
+  - Open a browser and navigate to `http://localhost:8080` (or your specified port).
+  - You should see the chat interface allowing you to create, join, and leave chat groups.
+
+- **Subscribe and Send Messages**:
+
+  - Open multiple browser windows and use different usernames to join the same group.
+  - Test message sending to verify that messages appear in real-time across all users in the group.
+
+- **Check RabbitMQ Connection**:
+  - Confirm that messages are being routed through RabbitMQ.
+  - You can monitor RabbitMQ activity by accessing its management console at `http://localhost:15672` (default port) if enabled.
 
 ## Troubleshooting
 
