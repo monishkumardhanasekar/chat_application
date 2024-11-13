@@ -33,3 +33,54 @@ The application is divided into the following parts:
 git clone https://github.com/yourusername/chat-application.git
 cd chat-application
 ```
+
+### Set Up RabbitMQ
+
+Ensure RabbitMQ is installed and running on your system. The default configuration expects RabbitMQ to be accessible on `localhost:61613` with the default guest user credentials.
+
+### Install Dependencies
+
+This project uses Spring Boot with Maven. Install all dependencies by running:
+
+```bash
+./mvnw clean install
+```
+
+## Running the Application
+
+### To run the application on the default port (8080):
+
+```bash
+./mvnw spring-boot:run
+```
+
+### Running on a Custom Port
+
+To start the application on a different port, use the `server.port` argument:
+
+```bash
+./mvnw spring-boot:run -Dspring-boot.run.arguments="--server.port=8082"
+```
+
+This command starts the server on `http://localhost:8082` and connects the WebSocket and RabbitMQ relay to the same port. This is useful if you want to run multiple instances of the application on different ports for testing.
+
+## Using Multiple Ports
+
+You can run multiple instances of the application on different ports by specifying a unique `server.port` value each time.
+
+- **Start the First Instance**:
+  ```bash
+  ./mvnw spring-boot:run -Dspring-boot.run.arguments="--server.port=8082"
+  ```
+- **Start a Second Instance on a Different Port (e.g., 8083)**:
+  `bash
+    ./mvnw spring-boot:run -Dspring-boot.run.arguments="--server.port=8083"
+    `
+  Each instance will function independently but still connect to RabbitMQ for real-time messaging.
+
+## Troubleshooting
+
+- **RabbitMQ connection errors**: Ensure RabbitMQ is running and accessible on `localhost:61613`. Check RabbitMQ logs if issues persist.
+- **WebSocket subscription errors**: Verify the WebSocket endpoints in both the backend (`WebSocketConfig.java`) and frontend (`main.js`).
+
+---
